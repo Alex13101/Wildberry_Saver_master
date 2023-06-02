@@ -1,0 +1,53 @@
+{% extends "includes/base.html" %}
+{% block content %}
+<h1>Ваш текст... </h1>
+<hr>
+<form method="POST" action="" novalidate>
+  {{ form.csrf_token }}
+  <div class="row g-3 align-items-center">
+    <div class="col-auto">
+      {{ form.email.label }}
+    </div>
+    <div class="col-auto">
+      {{ form.email(class="form-control") }}
+    </div>
+    {% for error in form.email.errors %}
+    <div class="alert alert-danger" role="alert">
+      <span>{{ error }}</span>
+    </div>
+    {% endfor %}
+    <div class="col-auto">
+      <span id="passwordHelpInline" class="form-text">
+        Must be 8-20 characters long.
+      </span>
+    </div>
+    {{ form.submit(class="btn btn-primary btn-lg") }}
+  </div>
+
+<div class="row my-5">
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Название</th>
+        <th scope="col">Скидка</th>
+        <th scope="col">Дата</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for query in queries %}
+      <tr>
+        <td>{{query.query_title}}</td>
+        <td>{{query.discount}}</td>
+        <td>{{query.created_at}}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+</div>
+
+</form>
+
+
+
+  {% endblock content %}

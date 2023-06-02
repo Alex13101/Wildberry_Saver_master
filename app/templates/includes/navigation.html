@@ -1,0 +1,25 @@
+<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+          aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse mx-5" id="navbarNav">
+    <ul class="navbar-nav">
+      <li class="nav-item active">
+        <a class="{% if title == 'Главная' %}navbar-brand{%else%}nav-link{%endif%}"href="{{ url_for('index') }}">Главная</a>
+      </li>
+      <li class="nav-brand">
+        <a class="{% if title == 'Новый запрос' %}navbar-brand{%else%}nav-link{%endif%}"href="{{ url_for('add_query') }}">Новый запрос</a>
+      </li>
+      <li class="nav-item">
+        <a class="{% if title == 'История запросов' %}navbar-brand{%else%}nav-link{%endif%}"href="{{ url_for('history_search') }}">История запросов</a>
+      </li>
+      <li class="nav-item">
+        <a class="{% if title == 'Уведомления' %}navbar-brand{%else%}nav-link{%endif%}"href="{{ url_for('notifications_page') }}">Уведомления</a>
+      </li>
+      <li class="nav-item">
+        <a class="{% if title == 'Помощь' %}navbar-brand{%else%}nav-link{%endif%}"href="{{ url_for('help_page') }}">Помощь</a>
+      </li>
+    </ul>
+  </div>
+</nav>
