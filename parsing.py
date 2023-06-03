@@ -13,6 +13,7 @@ def search_right_product(query):
 
     rs = (grequests.get(u) for u in urls)
     lst = grequests.map(rs)
+    lst = [el for el in lst if el.status_code == 200]
     all_products = [product for f in lst for product in f.json()['data']['products']]
     result = []
     for product in all_products:
@@ -21,16 +22,18 @@ def search_right_product(query):
         result.append(dct)
     return result
 
-queries = db.session.query().filter_by(query_title=()).all()  # Получаем все запросы из базы
 
-print(queries)
 
-def run_task(queries):
-    long_lst = len(search_right_product(queries))  # Длина списка товаров
+
+
+def run_task():
+    queries = db.session.query().filter_by(query_title=()).all()  # Получаем все запросы из базы
+
     for query in queries:
-        search_right_product(query)
-        all_products = []
-        for i in range(0, long_lst): # Идем по списку всех товаров
+
+        all_products = search_right_product(query)
+
+        for i in range(0, len(all_products)): # Идем по списку всех товаров
             product_name = all_products[i].setdefault("name")
             priced = all_products[i].setdefault('salePriceU')
             current_price = float(priced/100)
@@ -38,19 +41,46 @@ def run_task(queries):
             add_product_history_data(product_id, product_name, current_price, query)
 
 # Запуск задачи по расписанию
-schedule.every(6).hours.do(run_task(queries))  # Можно изменить интервал выполнения задачи
+  # Можно изменить интервал выполнения задачи
+
+def main():
+    schedule.every(6).hours.do(run_task)
+    while True:
+        try:
+            schedule.run_pending()
+        except Exception as E:
+            time.sleep(1)
 
 # Бесконечный цикл для выполнения задачи
 
+if __name__ == '__main__':
+    main()
 
-while True:
-    try:
-        schedule.run_pending()
-    except Exception as E:
-        time.sleep(1)
 
 
 
 # ToDo: Добавить функцию получения из БД списка запросов
 
 # ToDo: Добавить функцию записи данных в БД
+
+
+# rs = (grequests.get(url=response_93_http, json=j, headers=headers) for j in jsons)
+#     for r in grequests.map(rs, size=16, exception_handler=lambda d, y: print(d, y)):
+#         try:
+#             if r.status_code == 200:
+#                 print(r.json())
+#                 print(r.status_code, r.url)
+#         except Exception as e:
+#             print(e)
+
+
+# notifications = []
+# for product in products_all:
+#     product_id = product['id']
+#     product_name = product['name']
+#     current_price = product['price']
+#     notification = add_product_history_data(product_id, product_name, current_price, query_obj)
+#     if notification:
+#         notifications.append(notification)
+#
+# send_email(notifications)
