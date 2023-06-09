@@ -62,7 +62,7 @@ def run_task():
             discount = query.discount
             email = query.id #   ?????
             email_1 = email.email
-            send_email(query,product_name, discount,current_price, product_id, email)
+            send_email(query,product_name, discount, current_price, product_id, email)
 # Запуск задачи по расписанию
   # Можно изменить интервал выполнения задачи
 
