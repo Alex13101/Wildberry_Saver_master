@@ -5,10 +5,10 @@ def send_email(query, product_name, discount, current_price, product_id, email):
         Отправка электронного письма (email)
         """
     from_addr = "your-address@yandex.ru"
-    to_addr = email
+    to_addr = email # Получить емайл из базы по запросу и айди пользователя
     encode = 'utf-8'
     subject = "Уведомление о снижении цены."
-    text = f"По Вашему запросу {query} цена на товар {product_name} с артикулом - {product_id} снизилась на желаемые {discount} %  и составляет {current_price}"
+    text = f"По Вашему запросу '{query}' цена на товар {product_name} с артикулом - {product_id} снизилась на желаемые {discount} %  и составляет {current_price}"
 
     # оставшиеся настройки
     passwd = "**********"
