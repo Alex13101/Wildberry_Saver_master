@@ -9,7 +9,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255))
     email = db.Column(db.String(255))
-    queries = db.relationship("Query")
+    queries = db.relationship("Query", back_populates="user")
 
 
 class Query(db.Model):
@@ -21,7 +21,7 @@ class Query(db.Model):
     discount = db.Column(db.Float)
     created_at = db.Column(db.DateTime, default=datetime.now)
 
-    user = db.relationship("User")
+    user = db.relationship("User", back_populates="queries")
     products = db.relationship("Product", secondary="products_queries")
     notifications = db.relationship("Notification")
 
@@ -34,7 +34,7 @@ class Product(db.Model):
     price = db.Column(db.Float)
     created_at = db.Column(db.DateTime, default=datetime.now)
 
-    queries = db.relationship("Query", secondary="products_queries")
+    queries = db.relationship("Query", secondary="products_queries", back_populates="products")
     history = db.relationship("History")
 
 
@@ -55,7 +55,7 @@ class Notification(db.Model):
     current_price = db.Column(db.Float)
     created_at = db.Column(db.DateTime, default=datetime.now)
 
-    product = db.relationship("Product")
+    product = db.relationship("Product", viewonly=True)
 
 
 class History(db.Model):
@@ -66,4 +66,4 @@ class History(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.now)
     price = db.Column(db.Float)
 
-    product = db.relationship("Product")
+    product = db.relationship("Product", viewonly=True)
