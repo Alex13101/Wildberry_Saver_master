@@ -3,7 +3,9 @@ import time
 import schedule
 from app import db
 
-from app.crud import add_product_history_data
+from app.crude import add_product_history_data
+from send_mail import send_email
+
 
 
 def search_right_product(query):
@@ -13,7 +15,14 @@ def search_right_product(query):
 
     rs = (grequests.get(u) for u in urls)
     lst = grequests.map(rs)
-    lst = [el for el in lst if el.status_code == 200]
+    for el in lst:
+        try:
+            if el.status_code ==200:
+                lst.append(el)
+        except Exception as h:
+            print(h)
+
+    #lst = [el for el in lst if el.status_code == 200]
     all_products = [product for f in lst for product in f.json()['data']['products']]
     result = []
     for product in all_products:
@@ -22,12 +31,22 @@ def search_right_product(query):
         result.append(dct)
     return result
 
+#rs = (grequests.get(url=response_93_http, json=j, headers=headers) for j in jsons)
+#     for r in grequests.map(rs, size=16, exception_handler=lambda d, y: print(d, y)):
+#         try:
+#             if r.status_code == 200:
+#                 print(r.json())
+#                 print(r.status_code, r.url)
+#         except Exception as e:
+#             print(e)
+
 
 
 
 
 def run_task():
     queries = db.session.query().filter_by(query_title=()).all()  # Получаем все запросы из базы
+    notifications = []
 
     for query in queries:
 
@@ -39,7 +58,11 @@ def run_task():
             current_price = float(priced/100)
             product_id = all_products[i].setdefault('id')
             add_product_history_data(product_id, product_name, current_price, query)
-
+            notification = add_product_history_data(product_id, product_name, current_price, query)
+            discount = query.discount
+            email = query.id #   ?????
+            email_1 = email.email
+            send_email(query,product_name, discount,current_price, product_id, email)
 # Запуск задачи по расписанию
   # Можно изменить интервал выполнения задачи
 
@@ -64,14 +87,7 @@ if __name__ == '__main__':
 # ToDo: Добавить функцию записи данных в БД
 
 
-# rs = (grequests.get(url=response_93_http, json=j, headers=headers) for j in jsons)
-#     for r in grequests.map(rs, size=16, exception_handler=lambda d, y: print(d, y)):
-#         try:
-#             if r.status_code == 200:
-#                 print(r.json())
-#                 print(r.status_code, r.url)
-#         except Exception as e:
-#             print(e)
+#
 
 
 # notifications = []
@@ -84,3 +100,4 @@ if __name__ == '__main__':
 #         notifications.append(notification)
 #
 # send_email(notifications)
+
