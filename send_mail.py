@@ -4,14 +4,14 @@ def send_email(query, product_name, discount, current_price, product_id, email):
     """
         Отправка электронного письма (email)
         """
-    from_addr = "your-address@yandex.ru"
+    from_addr = "WB-servis@yandex.ru"
     to_addr = email # Получить емайл из базы по запросу и айди пользователя
     encode = 'utf-8'
     subject = "Уведомление о снижении цены."
     text = f"По Вашему запросу '{query}' цена на товар {product_name} с артикулом - {product_id} снизилась на желаемые {discount} %  и составляет {current_price}"
 
     # оставшиеся настройки
-    passwd = "**********"
+    passwd = "zqoghwvhrhdtrjyv"
     server = "smtp.yandex.ru"
     port = 587
     charset = f'Content-Type: text/plain; charset={encode}'
